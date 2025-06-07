@@ -1,0 +1,607 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if is_image_search %}
+        Videos matching image analysis
+    {% else %}
+        Videos for #{{ hashtag }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Base styling */
+    .search-container {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Content layout */
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    @media (min-width: 992px) {
+        .content-wrapper {
+            flex-direction: row;
+            gap: 20px;
+        }
+        
+        .reels-wrapper {
+            flex: 2;
+        }
+        
+        .sidebar {
+            flex: 1;
+            display: block !important;
+            height: calc(100vh - 140px);
+            overflow-y: auto;
+            position: sticky;
+            top: 140px;
+        }
+    }
+    
+    /* Reels styling */
+    .reels-container {
+        position: relative;
+        height: calc(100vh - 200px);
+        min-height: 600px;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        background-color: #000;
+        border-radius: 12px;
+        scrollbar-width: none; /* Firefox */
+    }
+    
+    .reels-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
+    }
+    
+    .reel-item {
+        position: relative;
+        height: 100%;
+        scroll-snap-align: start;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .video-container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    
+    .reel-video {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+        background-color: #000;
+    }
+    
+    /* Video overlay - hidden by default, shown on hover */
+    .video-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px;
+        background: linear-gradient(transparent, rgba(0,0,0,0.9));
+        color: white;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none; /* Allow clicks to pass through to the video */
+    }
+    
+    /* Show overlay on video container hover */
+    .video-container:hover .video-overlay {
+        opacity: 1;
+    }
+    
+    /* Always show overlay for active video on mobile */
+    .video-container.active .video-overlay {
+        opacity: 1;
+    }
+    
+    .video-info {
+        max-width: 80%;
+    }
+    
+    .username {
+        font-weight: 600;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .username img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 10px;
+        border: 2px solid white;
+    }
+    
+    .caption {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+    
+    /* Center play button */
+    .center-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        background-color: rgba(0,0,0,0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 15;
+    }
+    
+    /* Show center play button when paused and hovered */
+    .video-container.paused:hover .center-play {
+        opacity: 1;
+    }
+    
+    /* Always show center play when paused on mobile */
+    .video-container.paused .center-play {
+        opacity: 1;
+    }
+    
+    /* Control buttons in corner */
+    .video-controls {
+        position: absolute;
+        right: 15px;
+        bottom: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 20;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .video-container:hover .video-controls {
+        opacity: 1;
+    }
+    
+    .control-icon {
+        background-color: rgba(0,0,0,0.5);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 2px solid rgba(255,255,255,0.5);
+        pointer-events: auto; /* Make controls clickable */
+    }
+    
+    .control-icon:hover {
+        background-color: rgba(255,255,255,0.2);
+        transform: scale(1.1);
+    }
+    
+    /* Hashtags styling */
+    .hashtags {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .hashtag-pill {
+        display: inline-block;
+        background-color: rgba(255,255,255,0.2);
+        border-radius: 15px;
+        padding: 3px 10px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+        transition: all 0.2s;
+    }
+    
+    .hashtag-pill:hover {
+        background-color: rgba(255,255,255,0.3);
+    }
+    
+    /* Progress bar */
+    .progress-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: rgba(255,255,255,0.2);
+        z-index: 30;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        width: 0;
+        background: #2196F3;
+        transition: width 0.1s linear;
+    }
+    
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .video-overlay {
+            padding: 15px;
+        }
+        
+        /* On mobile, always show controls for current video */
+        .video-container.active .video-controls {
+            opacity: 1;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 class="mb-4">
+        {% if is_image_search %}
+            Videos matching your image
+            <small class="text-muted d-block fs-6">Keywords: {{ hashtag }}</small>
+        {% elif hashtag %}
+            Videos for #{{ hashtag }}
+        {% else %}
+            Search Results
+        {% endif %}
+    </h1>
+    
+    <!-- Search form directly on the results page -->
+    <div class="search-container">
+        <form method="post" action="{% url 'view_videos' %}" class="row g-3 align-items-center">
+            {% csrf_token %}
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text">#</span>
+                    <input type="text" class="form-control" id="hashtag" name="hashtag" 
+                           placeholder="Enter hashtag" value="{{ hashtag }}" required>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Search Videos</button>
+            </div>
+        </form>
+        
+        {% if is_image_search %}
+        <div class="mt-3">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="fas fa-camera me-2"></i>
+                    <h5 class="card-title mb-0">Image Analysis Results</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <!-- Display the uploaded image if available -->
+                            {% if uploaded_image %}
+                            <div class="position-relative">
+                                <img src="{{ uploaded_image }}" alt="Uploaded fashion image" class="img-fluid rounded shadow-sm">
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-dark">Fashion Image</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-center p-4 bg-light rounded">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                                <p class="mt-2">Image preview not available</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h6 class="fw-bold mb-3">Keywords detected in your image:</h6>
+                            <div class="keyword-cloud mb-4">
+                                {% for keyword in keywords %}
+                                    <a href="{% url 'view_videos' %}?hashtag={{ keyword }}" 
+                                       class="badge bg-primary text-white m-1 p-2 fs-6">
+                                       <i class="fas fa-tag me-1"></i>#{{ keyword }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="fas fa-info-circle me-2 fa-lg"></i>
+                                <div>
+                                    Found {{ count }} videos matching {{ keywords|length }} keywords from your image.
+                                    Click any keyword above to search for that specific term.
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="{% url 'search_video' %}" class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-camera me-1"></i> Try Another Image
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        <div class="mt-3">
+            <a href="{% url 'search_video' %}" class="btn btn-primary">Try Again</a>
+        </div>
+    {% elif videos %}
+        <div class="content-wrapper">
+            <div class="reels-wrapper">
+                <div class="reels-container">
+                    {% for video in videos %}
+                        <div class="reel-item" data-video-id="{{ forloop.counter }}">
+                            <div class="video-container paused">
+                                <video src="{{ video.video_url }}" loop class="reel-video"></video>
+                                
+                                <!-- Center play button -->
+                                <div class="center-play">
+                                    <i class="fas fa-play fa-lg"></i>
+                                </div>
+                                
+                                <!-- Video details overlay (shown on hover) -->
+                                <div class="video-overlay">
+                                    <div class="video-info">
+                                        <div class="username">
+                                            <img src="https://ui-avatars.com/api/?name={{ video.username }}&background=random" alt="{{ video.username }}">
+                                            @{{ video.username }}
+                                        </div>
+                                        
+                                        {% if video.caption %}
+                                            <p class="caption">{{ video.caption|truncatechars:100 }}</p>
+                                        {% endif %}
+                                        
+                                        {% if is_image_search and video.matching_keywords %}
+                                            <div class="matching-keywords">
+                                                <small class="text-white-50 d-block mb-1">Matched keywords:</small>
+                                                {% for keyword in video.matching_keywords %}
+                                                    <span class="badge bg-success me-1">{{ keyword }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if video.hashtags %}
+                                            <div class="hashtags">
+                                                {% for tag in video.hashtags %}
+                                                    <span class="hashtag-pill">#{{ tag }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Small controls in corner (shown on hover) -->
+                                <div class="video-controls">
+                                    <div class="control-icon volume" title="Mute/Unmute">
+                                        <i class="fas fa-volume-mute"></i>
+                                    </div>
+                                    <div class="control-icon like" title="Like">
+                                        <i class="far fa-heart"></i>
+                                    </div>
+                                </div>
+                                
+                                <!-- Progress bar -->
+                                <div class="progress-container">
+                                    <div class="progress-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="sidebar d-none d-lg-block">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <i class="fas fa-search me-2"></i> Search Results
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>{{ count }}</strong> videos found</p>
+                        <p class="mb-0">From <strong>{{ accounts_searched|length }}</strong> fashion accounts</p>
+                    </div>
+                </div>
+                
+                {% if is_image_search %}
+                <div class="card mb-3">
+                    <div class="card-header bg-primary text-white">
+                        <i class="fas fa-camera me-2"></i> Image Analysis
+                    </div>
+                    <div class="card-body">
+                        <p>Detected <strong>{{ keywords|length }}</strong> keywords</p>
+                        <div class="hashtags">
+                            {% for keyword in keywords %}
+                                <a href="{% url 'view_videos' %}?hashtag={{ keyword }}" class="badge bg-light text-dark d-inline-block mb-2 me-1">#{{ keyword }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <i class="fas fa-hashtag me-2"></i> Related Hashtags
+                    </div>
+                    <div class="card-body">
+                        <div class="hashtags">
+                            {% for tag in related_hashtags|slice:":10" %}
+                                <a href="{% url 'view_videos' %}?hashtag={{ tag }}" class="badge bg-light text-dark d-inline-block mb-2 me-1">#{{ tag }}</a>
+                            {% empty %}
+                                <p>No related hashtags found</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Select all videos and containers
+                const reelItems = document.querySelectorAll('.reel-item');
+                const videoContainers = document.querySelectorAll('.video-container');
+                const videos = document.querySelectorAll('.reel-video');
+                const volumeButtons = document.querySelectorAll('.volume');
+                const likeButtons = document.querySelectorAll('.like');
+                const progressBars = document.querySelectorAll('.progress-bar');
+                const centerPlayButtons = document.querySelectorAll('.center-play');
+                
+                // Function to handle video time updates for progress bar
+                function updateProgressBar(video, progressBar) {
+                    if (video.duration) {
+                        const percentage = (video.currentTime / video.duration) * 100;
+                        progressBar.style.width = percentage + '%';
+                    }
+                }
+                
+                // Function to play a video
+                function playVideo(index) {
+                    videos[index].play();
+                    videoContainers[index].classList.remove('paused');
+                    videoContainers[index].classList.add('active');
+                }
+                
+                // Function to pause a video
+                function pauseVideo(index) {
+                    videos[index].pause();
+                    videoContainers[index].classList.add('paused');
+                    videoContainers[index].classList.remove('active');
+                }
+                
+                // Initialize all videos
+                videos.forEach((video, index) => {
+                    // Set up progress bar
+                    video.addEventListener('timeupdate', function() {
+                        updateProgressBar(video, progressBars[index]);
+                    });
+                    
+                    // Click anywhere on video container to play/pause
+                    videoContainers[index].addEventListener('click', function(e) {
+                        // Check if the click was on a control button
+                        if (e.target.closest('.control-icon')) {
+                            return; // Don't toggle play/pause if clicking controls
+                        }
+                        
+                        if (video.paused) {
+                            // Pause all other videos first
+                            videos.forEach((v, i) => {
+                                if (i !== index) pauseVideo(i);
+                            });
+                            
+                            playVideo(index);
+                        } else {
+                            pauseVideo(index);
+                        }
+                    });
+                    
+                    // Handle volume button click
+                    volumeButtons[index].addEventListener('click', function(e) {
+                        e.stopPropagation(); // Prevent triggering video container click
+                        if (video.muted) {
+                            video.muted = false;
+                            this.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        } else {
+                            video.muted = true;
+                            this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                        }
+                    });
+                    
+                    // Handle like button click
+                    likeButtons[index].addEventListener('click', function(e) {
+                        e.stopPropagation(); // Prevent triggering video container click
+                        if (this.innerHTML.includes('far')) {
+                            this.innerHTML = '<i class="fas fa-heart text-danger"></i>';
+                        } else {
+                            this.innerHTML = '<i class="far fa-heart"></i>';
+                        }
+                    });
+                });
+                
+                // Play the first video on page load (with a delay for better UX)
+                if (videos.length > 0) {
+                    setTimeout(() => {
+                        playVideo(0);
+                        videos[0].muted = false;
+                        volumeButtons[0].innerHTML = '<i class="fas fa-volume-up"></i>';
+                    }, 1000);
+                }
+                
+                // Use Intersection Observer to detect visible videos
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const videoIndex = parseInt(entry.target.dataset.videoId) - 1;
+                        
+                        if (entry.isIntersecting && entry.intersectionRatio > 0.7) {
+                            // Pause all videos
+                            videos.forEach((v, i) => {
+                                if (i !== videoIndex) pauseVideo(i);
+                            });
+                            
+                            // Play the visible video
+                            playVideo(videoIndex);
+                            videos[videoIndex].muted = false;
+                            volumeButtons[videoIndex].innerHTML = '<i class="fas fa-volume-up"></i>';
+                        } else if (!entry.isIntersecting) {
+                            // Pause the video when it's not visible
+                            pauseVideo(videoIndex);
+                        }
+                    });
+                }, {
+                    threshold: 0.7 // 70% of the item must be visible
+                });
+                
+                // Observe all reel items
+                reelItems.forEach(item => {
+                    observer.observe(item);
+                });
+            });
+        </script>
+    {% else %}
+        <div class="alert alert-info">
+            No videos found for {% if is_image_search %}the image analysis keywords{% else %}#{{ hashtag }}{% endif %}
+        </div>
+        <div class="mt-3">
+            <a href="{% url 'search_video' %}" class="btn btn-primary">Try Another Search</a>
+        </div>
+    {% endif %}
+    
+    {% if is_women_fashion %}
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Women's Fashion</h1>
+        <div class="flex flex-wrap justify-center gap-2 mb-4">
+            {% for tag in matched_hashtags %}
+                <span class="bg-pink-100 text-pink-800 text-sm px-3 py-1 rounded-full">#{{ tag }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

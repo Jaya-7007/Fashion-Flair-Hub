@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+
+{% block title %}Women's Fashion | Fashion Flair Hub{% endblock %}
+
+{% block content %}
+<style>
+    /* Header styling */
+    .page-header {
+        background: linear-gradient(to right, #FCE4EC, #F8BBD0);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    /* Video grid layout */
+    .video-grid {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1.5rem;
+    }
+    
+    @media (min-width: 576px) {
+        .video-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .video-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .video-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    /* Video card styling */
+    .video-card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background-color: #fff;
+    }
+    
+    .video-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    .video-container {
+        position: relative;
+        aspect-ratio: 9/16;
+    }
+    
+    .video-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .video-tags {
+        position: absolute;
+        bottom: 0.5rem;
+        left: 0.5rem;
+        right: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+    
+    .video-tag {
+        background-color: rgba(0,0,0,0.6);
+        color: white;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+    
+    .video-info {
+        padding: 1rem;
+    }
+    
+    .video-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Category pills */
+    .category-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        justify-content: center;
+    }
+    
+    .category-pill {
+        background-color: #F8BBD0;
+        color: #880E4F;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .category-pill:hover, .category-pill.active {
+        background-color: #EC407A;
+        color: white;
+    }
+    
+    .section-title {
+        position: relative;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+    
+    .section-title::after {
+        content: "";
+        flex-grow: 1;
+        height: 1px;
+        background-color: #e0e0e0;
+        margin-left: 1rem;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="page-header text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold text-primary">Women's Fashion</h1>
+        <p class="lead">Discover the latest trends, outfits, and style inspirations</p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Category filters -->
+    <div class="category-pills">
+        <button class="category-pill active">All</button>
+        <button class="category-pill">Dresses</button>
+        <button class="category-pill">Casual</button>
+        <button class="category-pill">Formal</button>
+        <button class="category-pill">Accessories</button>
+        <button class="category-pill">Shoes</button>
+        <button class="category-pill">Seasonal</button>
+    </div>
+    
+    <!-- Latest Videos -->
+    <div class="mb-5">
+        <h2 class="section-title">
+            <i class="fas fa-film text-danger me-2"></i> Latest Fashion Videos
+        </h2>
+        
+        <div class="video-grid">
+            {% for video in videos %}
+                <div class="video-card">
+                    <div class="video-container">
+                        <video class="w-100 h-100 object-fit-cover" controls muted preload="metadata">
+                            <source src="{{ video.video_url }}" type="video/mp4">
+                        </video>
+                        {% if video.matching_tags %}
+                            <div class="video-tags">
+                                {% for tag in video.matching_tags|slice:":3" %}
+                                    <span class="video-tag">
+                                        #{{ tag }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="video-info">
+                        <div class="video-stats">
+                            <div class="d-flex align-items-center">
+                                <span class="text-danger">
+                                    <i class="fas fa-heart me-1"></i>
+                                    {{ video.like_count|default:"0" }}
+                                </span>
+                            </div>
+                            <span class="text-muted small">
+                                {{ video.view_count|default:"0" }} views
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No women's fashion videos found.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Fashion tips -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb text-warning me-2"></i> Fashion Tips
+            </h2>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Wardrobe Essentials</h5>
+                    <p class="card-text">Build your perfect capsule wardrobe with these timeless pieces that mix and match effortlessly.</p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">Learn More</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Styling Accessories</h5>
+                    <p class="card-text">Transform your outfit from basic to stunning with the right accessories and styling techniques.</p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">Learn More</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Color Coordination</h5>
+                    <p class="card-text">Master the art of color combinations to create visually appealing and harmonious outfits.</p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Fashion Influencers -->
+    <div class="mb-5">
+        <h2 class="section-title">
+            <i class="fas fa-users text-info me-2"></i> Fashion Influencers
+        </h2>
+        
+        <div class="row">
+            {% for i in "12345"|make_list %}
+                <div class="col-6 col-md-4 col-lg-2 mb-4">
+                    <div class="text-center">
+                        <img src="https://ui-avatars.com/api/?name=Fashion+Influencer+{{ i }}&background=random" 
+                             class="rounded-circle img-thumbnail mb-2" 
+                             alt="Fashion Influencer" 
+                             style="width: 100px; height: 100px; object-fit: cover;">
+                        <h6 class="mb-0">Style Queen</h6>
+                        <p class="text-muted small">@stylequeen{{ i }}</p>
+                        <button class="btn btn-sm btn-outline-primary">Follow</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Category pill selection
+        const pills = document.querySelectorAll('.category-pill');
+        pills.forEach(pill => {
+            pill.addEventListener('click', function() {
+                // Remove active class from all pills
+                pills.forEach(p => p.classList.remove('active'));
+                // Add active class to clicked pill
+                this.classList.add('active');
+            });
+        });
+        
+        // No autoplay for videos
+        // Remove the code that was previously observing videos and playing them automatically
+    });
+</script>
+{% endblock %}

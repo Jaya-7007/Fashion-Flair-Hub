@@ -1,0 +1,377 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Women's Fashion - Fashion Flair Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-white text-gray-900">
+  
+
+
+  
+  
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <style>
+          .modal-bg {
+              background: rgba(0,0,0,0.5);
+              display: none;
+          }
+          .modal-bg.active {
+              display: flex;
+          }
+          .no-outline:focus {
+              outline: none;
+              box-shadow: none;
+          }
+      </style>
+  </head>
+  <body class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center">
+  
+      <!-- Navbar -->
+      <nav class="bg-white shadow-sm border-b border-pink-100">
+          <div class="max-w-7xl mx-auto px-4 sm:px-8">
+              <div class="flex justify-between items-center h-20">
+                  <!-- Logo -->
+                  <div class="flex-shrink-0">
+                      <span class="text-3xl font-serif font-bold text-pink-600 tracking-wide">FASHION FLAIR HUB</span>
+                  </div>
+                  <!-- Navigation Links -->
+                  <div class="hidden md:flex space-x-8 ml-12">
+                      <a href="#" class="text-pink-600 font-semibold text-lg hover:text-pink-700 border-b-2 border-pink-500 pb-1">Home</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Men</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Women</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Fashion Ideas</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">About</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Contact</a>
+                  </div>
+                  <!-- Icons -->
+                  <div class="flex items-center space-x-6 ml-6">
+                      <!-- Moon Icon (Dark mode toggle placeholder) -->
+                      <button class="text-black hover:text-pink-600 focus:outline-none" title="Toggle Dark Mode">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+                          </svg>
+                      </button>
+                      <!-- Search Icon (opens modal) -->
+                      <button id="openModal" class="text-black hover:text-pink-600 focus:outline-none" title="Open Search">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                          </svg>
+                      </button>
+                      <!-- User Icon -->
+                      <button class="text-black hover:text-pink-600 focus:outline-none" title="Profile">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z"/>
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          </svg>
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </nav>
+  
+      
+  
+      <!-- Modal -->
+      <div id="modalBg" class="modal-bg fixed inset-0 z-50 items-center justify-center">
+          <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-xl mx-auto p-6 relative">
+              <!-- Close Icon -->
+              <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 focus:outline-none">
+                  <!-- X Icon SVG -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+              </button>
+              <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Search Fashion Content</h2>
+              <form class="flex flex-col sm:flex-row items-center gap-3">
+                  <div class="flex flex-1 items-center border-2 border-pink-400 rounded-lg px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-pink-300 transition">
+                      <input
+                          id="searchInput"
+                          type="text"
+                          placeholder="Search for fashion ideas, trends, styles..."
+                          class="flex-1 bg-transparent text-gray-700 placeholder-gray-400 no-outline"
+                      />
+                      <!-- Voice Icon -->
+                      <button type="button" id="voiceBtn" class="ml-2 text-pink-500 hover:text-pink-700" title="Voice Search">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18v2m0 0a4 4 0 01-4-4h8a4 4 0 01-4 4zm0-2V6a4 4 0 018 0v6a4 4 0 01-8 0z"/>
+                          </svg>
+                      </button>
+                      <!-- Camera Icon -->
+                      <button type="button" id="imageBtn" class="ml-2 text-pink-500 hover:text-pink-700" title="Image Search">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2zm9 3a4 4 0 100 8 4 4 0 000-8z"/>
+                          </svg>
+                      </button>
+                  </div>
+                  <button type="submit" class="bg-pink-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-pink-600 transition w-full sm:w-auto">Search</button>
+              </form>
+          </div>
+      </div>
+  
+      <script>
+          // Modal open/close
+          const openModal = document.getElementById('openModal');
+          const modalBg = document.getElementById('modalBg');
+          const closeModal = document.getElementById('closeModal');
+          const searchInput = document.getElementById('searchInput');
+  
+          openModal.addEventListener('click', () => {
+              modalBg.classList.add('active');
+              setTimeout(() => searchInput.focus(), 100);
+          });
+          closeModal.addEventListener('click', () => {
+              modalBg.classList.remove('active');
+              searchInput.value = '';
+          });
+          // Close modal on background click
+          modalBg.addEventListener('click', (e) => {
+              if (e.target === modalBg) {
+                  modalBg.classList.remove('active');
+                  searchInput.value = '';
+              }
+          });
+  
+          // Search functionality
+          document.querySelector('form').addEventListener('submit', function(e) {
+              e.preventDefault();
+              alert('Text Search: ' + searchInput.value);
+          });
+          document.getElementById('voiceBtn').addEventListener('click', function() {
+              alert('Voice Search initiated');
+          });
+          document.getElementById('imageBtn').addEventListener('click', function() {
+              alert('Image Search initiated');
+          });
+  
+          // Responsive: close modal on ESC
+          document.addEventListener('keydown', function(e) {
+              if (e.key === "Escape") {
+                  modalBg.classList.remove('active');
+                  searchInput.value = '';
+              }
+          });
+      </script>
+       <!DOCTYPE html>
+       <html lang="en">
+       <head>
+         <meta charset="UTF-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+         <title>Glamour - Auth</title>
+         <script src="https://cdn.tailwindcss.com"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+         <style>
+           body {
+             font-family: 'Playfair Display', serif;
+           }
+         </style>
+       </head>
+       <body class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center">
+       
+         <div class="container max-w-md mx-auto px-4 py-8">
+           <div class="bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden border-0">
+             <div class="text-center p-6 border-b dark:border-gray-700">
+               <h2 class="auth-animate text-2xl font-bold text-gray-900 dark:text-white">Welcome to Glamour</h2>
+               <p class="auth-animate text-gray-600 dark:text-gray-400" id="form-description">Sign in to your account</p>
+             </div>
+       
+             <div class="p-6">
+               <div class="auth-animate grid grid-cols-2 mb-6 border rounded overflow-hidden">
+                 <button class="tab-btn px-4 py-2 w-full font-medium text-center bg-pink-100 dark:bg-gray-700" data-tab="login">Login</button>
+                 <button class="tab-btn px-4 py-2 w-full font-medium text-center" data-tab="signup">Sign Up</button>
+               </div>
+       
+               <!-- Login Form -->
+               <form id="login" class="tab-content space-y-4">
+                 <div class="auth-animate">
+                   <label for="login-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                   <input id="login-email" type="email" placeholder="your@email.com"
+                     class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white"/>
+                 </div>
+                 <div class="auth-animate">
+                   <label for="login-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+                   <div class="relative">
+                     <input id="login-password" type="password" placeholder="••••••••"
+                       class="w-full border rounded px-3 py-2 pr-10 dark:bg-gray-800 dark:text-white"/>
+                     <button type="button" class="toggle-password absolute right-2 top-2 text-gray-600 dark:text-white">👁️</button>
+                   </div>
+                 </div>
+                 <div class="auth-animate flex items-center justify-between">
+                   <label class="flex items-center text-sm text-gray-700 dark:text-gray-300">
+                     <input type="checkbox" class="mr-2 h-4 w-4 rounded border-gray-300 text-pink-600"/>
+                     Remember me
+                   </label>
+                   <a href="#" class="text-sm text-pink-600 dark:text-pink-400 hover:text-pink-500">Forgot password?</a>
+                 </div>
+                 <button type="submit" class="auth-animate w-full bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-500">Sign In</button>
+               </form>
+       
+               <!-- Sign Up Form -->
+               <form id="signup" class="tab-content space-y-4 hidden">
+                 <div class="auth-animate">
+                   <label for="signup-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                   <input id="signup-name" placeholder="John Doe"
+                     class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white"/>
+                 </div>
+                 <div class="auth-animate">
+                   <label for="signup-email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                   <input id="signup-email" type="email" placeholder="your@email.com"
+                     class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white"/>
+                 </div>
+                 <div class="auth-animate">
+                   <label for="signup-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+                   <div class="relative">
+                     <input id="signup-password" type="password" placeholder="••••••••"
+                       class="w-full border rounded px-3 py-2 pr-10 dark:bg-gray-800 dark:text-white"/>
+                     <button type="button" class="toggle-password absolute right-2 top-2 text-gray-600 dark:text-white">👁️</button>
+                   </div>
+                 </div>
+                 <div class="auth-animate">
+                   <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
+                   <input id="signup-confirm-password" type="password" placeholder="••••••••"
+                     class="w-full border rounded px-3 py-2 dark:bg-gray-800 dark:text-white"/>
+                 </div>
+                 <div class="auth-animate flex items-start">
+                   <input type="checkbox" id="terms" class="h-4 w-4 rounded border-gray-300 text-pink-600 mt-1"/>
+                   <label for="terms" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                     I agree to the <a href="#" class="text-pink-600 dark:text-pink-400 hover:text-pink-500">Terms</a> and 
+                     <a href="#" class="text-pink-600 dark:text-pink-400 hover:text-pink-500">Privacy Policy</a>
+                   </label>
+                 </div>
+                 <button type="submit" class="auth-animate w-full bg-pink-600 text-white px-4 py-2 rounded hover:bg-pink-500">Create Account</button>
+               </form>
+             </div>
+       
+             <div class="p-6 border-t text-center dark:border-gray-700">
+               <p class="auth-animate text-sm text-gray-600 dark:text-gray-400">Or continue with</p>
+               <div class="flex justify-center space-x-4 mt-4">
+                 <button class="auth-animate border p-2 rounded-full">🌐</button>
+                 <button class="auth-animate border p-2 rounded-full">🐦</button>
+                 <button class="auth-animate border p-2 rounded-full">🐙</button>
+               </div>
+             </div>
+           </div>
+         </div>
+       
+         <script>
+           // Tab switch
+           const tabButtons = document.querySelectorAll(".tab-btn");
+           const tabContents = document.querySelectorAll(".tab-content");
+           const formDescription = document.getElementById("form-description");
+       
+           tabButtons.forEach(btn => {
+             btn.addEventListener("click", () => {
+               const tab = btn.dataset.tab;
+               tabButtons.forEach(b => b.classList.remove("bg-pink-100", "dark:bg-gray-700"));
+               btn.classList.add("bg-pink-100", "dark:bg-gray-700");
+       
+               tabContents.forEach(content => {
+                 content.style.display = content.id === tab ? "block" : "none";
+               });
+       
+               formDescription.innerText = tab === "login" ? "Sign in to your account" : "Create a new account";
+       
+               gsap.from(".auth-animate", {
+                 opacity: 0,
+                 y: 20,
+                 stagger: 0.1,
+                 duration: 0.6,
+                 ease: "power3.out",
+               });
+             });
+           });
+       
+           // Toggle password visibility
+           document.querySelectorAll(".toggle-password").forEach(btn => {
+             btn.addEventListener("click", () => {
+               const input = btn.previousElementSibling;
+               input.type = input.type === "password" ? "text" : "password";
+               btn.textContent = input.type === "password" ? "👁️" : "🙈";
+             });
+           });
+       
+           // Animate initial load
+           gsap.from(".auth-animate", {
+             opacity: 0,
+             y: 20,
+             stagger: 0.1,
+             duration: 0.6,
+             ease: "power3.out",
+           });
+         </script>
+       </body>
+       </html>
+       
+        <!-- Footer -->
+  <footer class="bg-gray-50 mt-16 pt-12 pb-6 border-t">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
+      <!-- Brand & Social -->
+      <div>
+        <div class="text-2xl font-bold text-pink-600 mb-2">FASHION FLAIR HUB</div>
+        <p class="text-gray-600 mb-4">
+          Your ultimate destination for fashion inspiration and style ideas. Discover the latest trends through curated short videos from across the web.
+        </p>
+        <div class="flex space-x-4 text-2xl text-gray-500">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <!-- Quick Links -->
+      <div>
+        <div class="font-bold text-lg mb-2">Quick Links</div>
+        <ul class="space-y-2 text-gray-700">
+          <li><a href="#" class="hover:text-pink-600">About Us</a></li>
+          <li><a href="#" class="hover:text-pink-600">Contact Us</a></li>
+          <li><a href="#" class="hover:text-pink-600">Women's Fashion</a></li>
+          <li><a href="#" class="hover:text-pink-600">Men's Fashion</a></li>
+          <li><a href="#" class="hover:text-pink-600">Fashion Ideas</a></li>
+        </ul>
+      </div>
+      <!-- Contact Info -->
+      <div>
+        <div class="font-bold text-lg mb-2">Contact Info</div>
+        <ul class="space-y-2 text-gray-700">
+          <li>
+            <span class="text-pink-600 mr-2">&#x1F4CD;</span>
+            123 Fashion Street, Style Avenue, Trend City, 10001
+          </li>
+          <li>
+            <span class="text-pink-600 mr-2">&#x260E;</span>
+            +1 (555) 123-4567
+          </li>
+          <li>
+            <span class="text-pink-600 mr-2">&#x2709;</span>
+            info@fashionflairhub.com
+          </li>
+        </ul>
+      </div>
+      <!-- Subscribe -->
+      <div>
+        <div class="font-bold text-lg mb-2">Subscribe</div>
+        <p class="text-gray-600 mb-3">Get the latest fashion trends and style ideas delivered to your inbox.</p>
+        <form>
+          <input type="email" placeholder="Your email address" class="w-full border rounded px-3 py-2 mb-2 focus:outline-none" />
+          <button type="submit" class="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="mt-10 border-t pt-4 text-center text-gray-500 text-sm">
+      © 2025 Fashion Flair Hub. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>
+
+
+
+  </body>
+  </html>

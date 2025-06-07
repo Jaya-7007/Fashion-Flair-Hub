@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fashion Categories</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display:700,400&display=swap">
+  <style>
+    body {
+      font-family: 'Playfair Display', serif;
+      background: #fafbfc;
+      margin: 0;
+      padding: 0;
+    }
+    .categories-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 60px 0;
+    }
+    .category-card {
+      position: relative;
+      width: 600px;
+      height: 350px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      background: #fff;
+      transition: transform 0.4s cubic-bezier(.4,2,.3,1);
+    }
+    .category-card:hover {
+      transform: scale(1.04) rotate(-1deg);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+    }
+    .category-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.2) brightness(0.85);
+      transition: filter 0.6s cubic-bezier(.4,2,.3,1);
+      animation: sapFadeIn 1.2s cubic-bezier(.4,2,.3,1);
+    }
+    .category-card:hover .category-image {
+      filter: grayscale(0) brightness(1);
+    }
+    @keyframes sapFadeIn {
+      0% { opacity: 0; transform: scale(1.08);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    .category-content {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+      color: #fff;
+      z-index: 2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    .category-title {
+      font-size: 2rem;
+      margin: 0 0 10px 0;
+      font-weight: 700;
+    }
+    .category-desc {
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+    }
+    /* Codrops-inspired button */
+    .codrops-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(90deg, #ff5f8f 0%, #ffb86c 100%);
+      border: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 16px rgba(255,95,143,0.18);
+      cursor: pointer;
+      transition: background 0.4s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .codrops-btn:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: 100%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+      z-index: 0;
+    }
+    .codrops-btn:hover:after {
+      width: 200%;
+      height: 500%;
+    }
+    .codrops-btn span {
+      position: relative;
+      z-index: 1;
+    }
+    .codrops-btn:hover {
+      background: linear-gradient(90deg, #ffb86c 0%, #ff5f8f 100%);
+      transform: translateY(-2px) scale(1.04);
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h1 style="text-align:center; font-size:2.8rem; margin-top:60px;">Fashion Categories</h1>
+    <p style="text-align:center; color:#555; font-size:1.2rem;">Explore fashion content by category to find exactly what inspires you.</p>
+    <div class="categories-container">
+      <!-- Women's Fashion -->
+      <div class="category-card">
+        <img class="category-image" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=80" alt="Women's Fashion">
+        <div class="category-content">
+          <div class="category-title">Women's Fashion</div>
+          <div class="category-desc">Discover the latest trends and styles</div>
+          <button class="codrops-btn"><span>Explore Women</span></button>
+        </div>
+      </div>
+      <!-- Men's Fashion -->
+      <div class="category-card">
+        <img class="category-image" src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80" alt="Men's Fashion">
+        <div class="category-content">
+          <div class="category-title">Men's Fashion</div>
+          <div class="category-desc">Elevate your style with trending looks</div>
+          <button class="codrops-btn"><span>Explore Men</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

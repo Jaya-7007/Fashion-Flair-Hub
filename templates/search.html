@@ -1,0 +1,480 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Fashion Reels{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Search Fashion Reels</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="searchTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="text-tab" data-toggle="tab" href="#text-search" role="tab">Text Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="image-tab" data-toggle="tab" href="#image-search" role="tab">Image Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="voice-tab" data-toggle="tab" href="#voice-search" role="tab">Voice Search</a>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content mt-4" id="searchTabsContent">
+                        <!-- Text Search Tab -->
+                        <div class="tab-pane fade show active" id="text-search" role="tabpanel">
+                            <form method="post" action="{% url 'view_videos' %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="hashtag">Search by Hashtag</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">#</span>
+                                        </div>
+                                        <input type="text" class="form-control" id="hashtag" name="hashtag" 
+                                               placeholder="Enter fashion hashtag" required>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-secondary" id="voice-input-btn">
+                                                <i class="fas fa-microphone"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">For example: style, ootd, fashion</small>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Search Reels</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Image Search Tab -->
+                        <div class="tab-pane fade" id="image-search" role="tabpanel">
+                            <form method="post" action="{% url 'image_search' %}" enctype="multipart/form-data" id="image-form">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="image">Upload an Image</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image" name="image" accept="image/*" required>
+                                        <label class="custom-file-label" for="image">Choose file...</label>
+                                    </div>
+                                    <small class="form-text text-muted">Upload a fashion image to find similar content</small>
+                                </div>
+                                <div class="mt-3">
+                                    <div id="image-preview-container" class="d-none mb-3">
+                                        <img id="image-preview" class="img-fluid rounded" alt="Preview">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block" id="analyze-image-btn">Analyze Image</button>
+                            </form>
+                            
+                            <!-- Keyword Results Section (hidden by default) -->
+                            <div id="keyword-results" class="mt-4 d-none"></div>
+                            
+                            <!-- Find Reels Form (hidden by default) -->
+                            <form method="post" action="{% url 'image_search' %}" enctype="multipart/form-data" id="find-reels-form" class="d-none mt-3">
+                                {% csrf_token %}
+                                <input type="hidden" id="extracted-image" name="image">
+                                <input type="hidden" id="extracted-keywords" name="extracted_keywords">
+                                <button type="submit" class="btn btn-success btn-lg btn-block">
+                                    <i class="fas fa-search me-2"></i> Find Reels with These Keywords
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Voice Search Tab -->
+                        <div class="tab-pane fade" id="voice-search" role="tabpanel">
+                            <div class="text-center mb-4">
+                                <p class="lead">Speak your fashion search query</p>
+                                <div class="voice-search-container">
+                                    <div id="voice-button-container" class="mb-3">
+                                        <button id="start-voice-search" class="btn btn-outline-primary btn-lg rounded-circle p-4">
+                                            <i class="fas fa-microphone fa-2x"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="recording-status" class="d-none mb-3">
+                                        <div class="recording-indicator mb-2">
+                                            <div class="recording-wave"></div>
+                                            <div class="recording-wave"></div>
+                                            <div class="recording-wave"></div>
+                                        </div>
+                                        <p class="text-danger mb-0">Recording... Speak now</p>
+                                    </div>
+                                    
+                                    <div id="voice-result" class="d-none">
+                                        <div class="card border-primary mb-3">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="m-0">I heard you say:</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p id="voice-text" class="lead text-center"></p>
+                                            </div>
+                                        </div>
+                                        
+                                        <form method="post" action="{% url 'view_videos' %}" id="voice-search-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" id="voice-hashtag" name="hashtag" value="">
+                                            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                                                <i class="fas fa-search me-2"></i> Search Reels with Voice Query
+                                            </button>
+                                        </form>
+                                        
+                                        <button id="retry-voice-search" class="btn btn-outline-secondary mt-3">
+                                            <i class="fas fa-redo me-2"></i> Try Again
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> Try saying things like:
+                                <ul class="mb-0 mt-2">
+                                    <li>"Show me summer dresses"</li>
+                                    <li>"Find casual outfits"</li>
+                                    <li>"Search for streetwear styles"</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Popular Hashtags Section -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Popular Fashion Hashtags</h5>
+                </div>
+                <div class="card-body">
+                    <div class="hashtag-cloud">
+                        <a href="{% url 'view_videos' %}?hashtag=fashion" class="badge bg-primary text-white m-1 p-2">#fashion</a>
+                        <a href="{% url 'view_videos' %}?hashtag=ootd" class="badge bg-secondary text-white m-1 p-2">#ootd</a>
+                        <a href="{% url 'view_videos' %}?hashtag=style" class="badge bg-success text-white m-1 p-2">#style</a>
+                        <a href="{% url 'view_videos' %}?hashtag=outfit" class="badge bg-danger text-white m-1 p-2">#outfit</a>
+                        <a href="{% url 'view_videos' %}?hashtag=streetstyle" class="badge bg-warning m-1 p-2">#streetstyle</a>
+                        <a href="{% url 'view_videos' %}?hashtag=fashionblogger" class="badge bg-info m-1 p-2">#fashionblogger</a>
+                        <a href="{% url 'view_videos' %}?hashtag=lookbook" class="badge bg-dark text-white m-1 p-2">#lookbook</a>
+                        <a href="{% url 'view_videos' %}?hashtag=fashionstyle" class="badge bg-primary text-white m-1 p-2">#fashionstyle</a>
+                        <a href="{% url 'view_videos' %}?hashtag=stylish" class="badge bg-secondary text-white m-1 p-2">#stylish</a>
+                        <a href="{% url 'view_videos' %}?hashtag=trending" class="badge bg-success text-white m-1 p-2">#trending</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Voice recording animation */
+    .recording-indicator {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+    }
+    
+    .recording-wave {
+        width: 5px;
+        height: 40px;
+        background-color: #dc3545;
+        margin: 0 3px;
+        border-radius: 5px;
+        animation: recording-wave 1s infinite ease-in-out;
+    }
+    
+    .recording-wave:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .recording-wave:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes recording-wave {
+        0%, 100% {
+            height: 10px;
+        }
+        50% {
+            height: 40px;
+        }
+    }
+</style>
+
+<script>
+    // Show filename when file is selected
+    document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        var nextSibling = e.target.nextElementSibling;
+        nextSibling.innerText = fileName;
+        
+        // Image preview
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('image-preview').setAttribute('src', e.target.result);
+            document.getElementById('image-preview-container').classList.remove('d-none');
+        }
+        reader.readAsDataURL(e.target.files[0]);
+    });
+    
+    // Bootstrap tabs functionality
+    document.querySelectorAll('#searchTabs a').forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Hide all tab content
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('show', 'active');
+            });
+            
+            // Deactivate all tabs
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show the clicked tab content
+            const tabId = this.getAttribute('href');
+            document.querySelector(tabId).classList.add('show', 'active');
+            
+            // Set clicked tab as active
+            this.classList.add('active');
+        });
+    });
+    
+    document.querySelector('#image-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const imageInput = document.querySelector('#image');
+        if (!imageInput.files[0]) {
+            alert('Please select an image file');
+            return;
+        }
+        
+        // Hide find reels form if it was previously shown
+        document.querySelector('#find-reels-form').classList.add('d-none');
+        
+        // Show loading indicator
+        document.querySelector('#keyword-results').innerHTML = 
+            '<div class="text-center py-3"><div class="spinner-border text-primary" role="status">' +
+            '<span class="visually-hidden">Loading...</span></div>' +
+            '<p class="mt-2">Analyzing image with AI...</p></div>';
+        document.querySelector('#keyword-results').classList.remove('d-none');
+        
+        // Create form data
+        const formData = new FormData();
+        formData.append('image', imageInput.files[0]);
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+        
+        // Store the image data for later use in the Find Reels form
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('extracted-image').setAttribute('value', e.target.result);
+        }
+        reader.readAsDataURL(imageInput.files[0]);
+        
+        // Send AJAX request
+        fetch('{% url "analyze_image_only" %}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                document.querySelector('#keyword-results').innerHTML = 
+                    `<div class="alert alert-danger">${data.error}</div>`;
+            } else {
+                // Store the extracted keywords for the Find Reels form
+                document.getElementById('extracted-keywords').value = JSON.stringify(data.keywords);
+                
+                // Display keywords
+                let keywordsHTML = '<div class="card border-primary">' +
+                    '<div class="card-header bg-primary text-white">AI Image Analysis Results</div>' +
+                    '<div class="card-body">' +
+                    '<p>Keywords detected in your image:</p>' +
+                    '<div class="keyword-cloud mb-3">';
+                    
+                data.keywords.forEach(keyword => {
+                    keywordsHTML += `<span class="badge bg-primary text-white m-1 p-2">#${keyword}</span>`;
+                });
+                
+                keywordsHTML += '</div>' +
+                    '</div></div>';
+                    
+                document.querySelector('#keyword-results').innerHTML = keywordsHTML;
+                
+                // Show the Find Reels form
+                document.querySelector('#find-reels-form').classList.remove('d-none');
+            }
+        })
+        .catch(error => {
+            document.querySelector('#keyword-results').innerHTML = 
+                `<div class="alert alert-danger">Error analyzing image: ${error.message}</div>`;
+        });
+    });
+    
+    // Handle the Find Reels form submission
+    document.querySelector('#find-reels-form').addEventListener('submit', function(e) {
+        // The form will submit normally to the image_search URL
+        // We've already populated the extracted-image and extracted-keywords hidden fields
+        
+        // Show a loading message below the button if desired
+        const loadingMsg = document.createElement('div');
+        loadingMsg.className = 'text-center mt-2';
+        loadingMsg.innerHTML = '<div class="spinner-border spinner-border-sm text-success" role="status"></div> ' +
+                              '<span>Finding reels, please wait...</span>';
+        
+        this.appendChild(loadingMsg);
+    });
+    
+    // Voice search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const startVoiceButton = document.getElementById('start-voice-search');
+        const retryVoiceButton = document.getElementById('retry-voice-search');
+        const recordingStatus = document.getElementById('recording-status');
+        const voiceResult = document.getElementById('voice-result');
+        const voiceText = document.getElementById('voice-text');
+        const voiceHashtag = document.getElementById('voice-hashtag');
+        const voiceButtonContainer = document.getElementById('voice-button-container');
+        
+        // Check for browser support
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            
+            // Start recording when button is clicked
+            startVoiceButton.addEventListener('click', function() {
+                // Hide button, show recording indicator
+                voiceButtonContainer.classList.add('d-none');
+                recordingStatus.classList.remove('d-none');
+                voiceResult.classList.add('d-none');
+                
+                // Start recognition
+                try {
+                    recognition.start();
+                } catch(e) {
+                    console.error('Speech recognition error:', e);
+                    showVoiceError('Could not start speech recognition. Please try again.');
+                }
+            });
+            
+            // Process results from speech recognition
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                const confidence = event.results[0][0].confidence;
+                
+                console.log(`Voice input: ${transcript} (confidence: ${confidence})`);
+                
+                // Process the transcript to extract good search terms
+                const searchTerm = processVoiceInput(transcript);
+                
+                // Display the result
+                voiceText.textContent = transcript;
+                voiceHashtag.value = searchTerm;
+                
+                // Hide recording status, show result
+                recordingStatus.classList.add('d-none');
+                voiceResult.classList.remove('d-none');
+            };
+            
+            // Error handling
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                showVoiceError(`Error: ${event.error}. Please try again.`);
+            };
+            
+            // When recognition ends
+            recognition.onend = function() {
+                // If the result is not shown, show an error or the button again
+                if (voiceResult.classList.contains('d-none') && recordingStatus.classList.contains('d-none')) {
+                    showVoiceError('No speech was detected. Please try again.');
+                }
+            };
+            
+            // Retry button
+            retryVoiceButton.addEventListener('click', function() {
+                voiceResult.classList.add('d-none');
+                voiceButtonContainer.classList.remove('d-none');
+            });
+            
+            // Voice input for the text search field
+            document.getElementById('voice-input-btn').addEventListener('click', function() {
+                const textInput = document.getElementById('hashtag');
+                
+                // Start recognition for the text field
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    const searchTerm = processVoiceInput(transcript);
+                    textInput.value = searchTerm;
+                };
+                
+                try {
+                    recognition.start();
+                    this.classList.add('btn-danger');
+                    this.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                } catch(e) {
+                    console.error('Speech recognition error:', e);
+                    alert('Could not start speech recognition. Please try again.');
+                }
+                
+                recognition.onend = function() {
+                    document.getElementById('voice-input-btn').classList.remove('btn-danger');
+                    document.getElementById('voice-input-btn').innerHTML = '<i class="fas fa-microphone"></i>';
+                };
+            });
+            
+        } else {
+            // Browser doesn't support speech recognition
+            document.getElementById('voice-tab').style.display = 'none';
+            document.getElementById('voice-input-btn').style.display = 'none';
+        }
+        
+        function showVoiceError(message) {
+            recordingStatus.classList.add('d-none');
+            voiceButtonContainer.classList.remove('d-none');
+            
+            // Show error message temporarily
+            const errorMsg = document.createElement('div');
+            errorMsg.className = 'alert alert-danger mt-3';
+            errorMsg.textContent = message;
+            
+            const container = document.querySelector('.voice-search-container');
+            container.appendChild(errorMsg);
+            
+            setTimeout(() => {
+                container.removeChild(errorMsg);
+            }, 5000);
+        }
+        
+        function processVoiceInput(transcript) {
+            // Remove common filler phrases
+            let processed = transcript.toLowerCase()
+                .replace(/show me|find|search for|look for|i want to see|i want|can i see|please show/gi, '')
+                .replace(/fashion|reels|videos|content|posts/gi, '')
+                .trim();
+            
+            // Extract the most relevant keywords for fashion search
+            const fashionKeywords = [
+                'dress', 'dresses', 'outfit', 'outfits', 'style', 'styles',
+                'casual', 'formal', 'streetwear', 'accessories', 'shoes',
+                'summer', 'winter', 'spring', 'fall', 'autumn',
+                'men', 'women', 'unisex', 'vintage', 'modern',
+                'jeans', 'pants', 'shirts', 'skirts', 'blouses',
+                'party', 'work', 'business', 'athleisure', 'sportswear'
+            ];
+            
+            // If the transcript contains any fashion keywords, prioritize them
+            const foundKeywords = [];
+            fashionKeywords.forEach(keyword => {
+                if (processed.includes(keyword)) {
+                    foundKeywords.push(keyword);
+                }
+            });
+            
+            return foundKeywords.length > 0 ? foundKeywords.join(' ') : processed;
+        }
+    });
+</script>
+{% endblock %}

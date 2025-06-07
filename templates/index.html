@@ -1,0 +1,1108 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  <title>FashionFlairHub - Home</title>
+{% endblock title %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Women's Fashion - Fashion Flair Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-white text-gray-900">
+      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+      <style>
+          .modal-bg {
+              background: rgba(0,0,0,0.5);
+              display: none;
+          }
+          .modal-bg.active {
+              display: flex;
+          }
+          .no-outline:focus {
+              outline: none;
+              box-shadow: none;
+          }
+      </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">  
+      <!-- Navbar -->
+      <nav class="bg-white shadow-sm border-b border-pink-100">
+          <div class="max-w-7xl mx-auto px-4 sm:px-8">
+              <div class="flex justify-between items-center h-20">
+                  <!-- Logo -->
+                  <div class="flex-shrink-0">
+                      <span class="text-3xl font-serif font-bold text-pink-600 tracking-wide">FASHION FLAIR HUB</span>
+                  </div>
+                  <!-- Navigation Links -->
+                  <div class="hidden md:flex space-x-8 ml-12">
+                      <a href="#" class="text-pink-600 font-semibold text-lg hover:text-pink-700 border-b-2 border-pink-500 pb-1">Home</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Men</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Women</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Fashion Ideas</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">About</a>
+                      <a href="#" class="text-black font-semibold text-lg hover:text-pink-600">Contact</a>
+                  </div>
+                  <!-- Icons -->
+                  <div class="flex items-center space-x-6 ml-6">
+                      <!-- Moon Icon (Dark mode toggle placeholder) -->
+                      <button class="text-black hover:text-pink-600 focus:outline-none" title="Toggle Dark Mode">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/>
+                          </svg>
+                      </button>
+                      <!-- Search Icon (opens modal) -->
+                      <a href="{% url 'search_video' %}" class="text-black hover:text-pink-600 focus:outline-none" title="Open Search">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                          </svg>
+                      </a>
+                      <!-- User Icon -->
+                      <button class="text-black hover:text-pink-600 focus:outline-none" title="Profile">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1112 21a9 9 0 01-6.879-3.196z"/>
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                          </svg>
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </nav>
+    
+      <!-- Modal -->
+      <div id="modalBg" class="modal-bg fixed inset-0 z-50 items-center justify-center">
+          <div class="bg-white rounded-lg shadow-lg w-11/12 max-w-xl mx-auto p-6 relative">
+              <!-- Close Icon -->
+              <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 focus:outline-none">
+                  <!-- X Icon SVG -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+              </button>              <h2 class="text-2xl md:text-3xl font-bold text-center mb-6">Search Fashion Reels</h2>
+              <form class="flex flex-col sm:flex-row items-center gap-3" method="post" action="{% url 'view_videos' %}">
+                  {% csrf_token %}
+                  <div class="flex flex-1 items-center border-2 border-pink-400 rounded-lg px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-pink-300 transition">
+                      <span class="text-pink-500 font-bold">#</span>
+                      <input
+                          id="searchInput"
+                          name="hashtag"
+                          type="text"
+                          placeholder="Enter hashtag to find reels (e.g. fashion, outfits, style)"
+                          class="flex-1 bg-transparent text-gray-700 placeholder-gray-400 no-outline ml-1"
+                          required
+                      />
+                      <!-- Voice Icon -->
+                      <button type="button" id="voiceBtn" class="ml-2 text-pink-500 hover:text-pink-700" title="Voice Search">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18v2m0 0a4 4 0 01-4-4h8a4 4 0 01-4 4zm0-2V6a4 4 0 018 0v6a4 4 0 01-8 0z"/>
+                          </svg>
+                      </button>
+                      <!-- Camera Icon -->
+                      <button type="button" id="imageBtn" class="ml-2 text-pink-500 hover:text-pink-700" title="Image Search">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h2l2-3h10l2 3h2a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V9a2 2 0 012-2zm9 3a4 4 0 100 8 4 4 0 000-8z"/>
+                          </svg>
+                      </button>
+                  </div>
+                  <button type="submit" class="bg-pink-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-pink-600 transition w-full sm:w-auto">Find Reels</button>
+              </form>
+          </div>
+      </div>
+  
+      <script>          // Modal open/close
+          const openModal = document.getElementById('openModal');
+          const modalBg = document.getElementById('modalBg');
+          const closeModal = document.getElementById('closeModal');
+          const searchInput = document.getElementById('searchInput');
+          const voiceBtn = document.getElementById('voiceBtn');
+  
+          openModal.addEventListener('click', () => {
+              modalBg.classList.add('active');
+              setTimeout(() => searchInput.focus(), 100);
+          });
+          closeModal.addEventListener('click', () => {
+              modalBg.classList.remove('active');
+              searchInput.value = '';
+          });
+          // Close modal on background click
+          modalBg.addEventListener('click', (e) => {
+              if (e.target === modalBg) {
+                  modalBg.classList.remove('active');
+                  searchInput.value = '';
+              }
+          });
+          
+          // Voice search functionality
+          voiceBtn.addEventListener('click', () => {
+              if ('webkitSpeechRecognition' in window) {
+                  const recognition = new webkitSpeechRecognition();
+                  recognition.lang = 'en-US';
+                  
+                  recognition.onstart = () => {
+                      voiceBtn.classList.add('text-pink-700');
+                      voiceBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>';
+                  };
+                  
+                  recognition.onresult = (event) => {
+                      const transcript = event.results[0][0].transcript;
+                      searchInput.value = transcript.replace('#', '').trim();
+                  };
+                  
+                  recognition.onend = () => {
+                      voiceBtn.classList.remove('text-pink-700');
+                      voiceBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18v2m0 0a4 4 0 01-4-4h8a4 4 0 01-4 4zm0-2V6a4 4 0 018 0v6a4 4 0 01-8 0z"/></svg>';
+                  };
+                  
+                  recognition.start();
+              } else {
+                  alert('Voice search is not supported in your browser. Try Chrome!');
+              }
+          });
+  
+          // Search functionality
+          document.querySelector('form').addEventListener('submit', function(e) {
+              e.preventDefault();
+              alert('Text Search: ' + searchInput.value);
+          });
+          document.getElementById('voiceBtn').addEventListener('click', function() {
+              alert('Voice Search initiated');
+          });
+          document.getElementById('imageBtn').addEventListener('click', function() {
+              alert('Image Search initiated');
+          });
+  
+          // Responsive: close modal on ESC
+          document.addEventListener('keydown', function(e) {
+              if (e.key === "Escape") {
+                  modalBg.classList.remove('active');
+                  searchInput.value = '';
+              }
+          });
+      </script>
+  </body>
+  </html>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .hero-bg {
+      background-image: url('http://lobsterandswan.com/wp-content/uploads/2012/08/magazinevogue120models.jpg');
+      background-size: cover;
+      background-position:  center ;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-white text-gray-900">
+
+  <!-- Hero Section -->
+  <section class="hero-bg text-white py-20 relative">
+    <div class="absolute inset-0 bg-black/60 z-0"></div> <!-- semi-transparent overlay -->
+    <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+      <h1 class="text-5xl md:text-7xl font-bold drop-shadow-lg">Discover Your Fashion Identity</h1>
+      <p class="text-lg md:text-xl mt-4 drop-shadow-lg">Short Reels • AI Styling  </p>
+      <button class="mt-6 px-8 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full shadow-lg transition">
+        Get Started
+      </button>
+    </div>
+  </section>
+  
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Fashion Categories</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Playfair+Display:700,400&display=swap">
+    <style>
+      body {
+        font-family: 'Playfair Display', serif;
+        background: #fafbfc;
+        margin: 0;
+        padding: 0;
+      }
+      .categories-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin: 60px 0;
+      }
+      .category-card {
+        position: relative;
+        width: 600px;
+        height: 350px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        background: #fff;
+        transition: transform 0.4s cubic-bezier(.4,2,.3,1);
+      }
+      .category-card:hover {
+        transform: scale(1.04) rotate(-1deg);
+        box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+      }
+      .category-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(0.2) brightness(0.85);
+        transition: filter 0.6s cubic-bezier(.4,2,.3,1);
+        animation: sapFadeIn 1.2s cubic-bezier(.4,2,.3,1);
+      }
+      .category-card:hover .category-image {
+        filter: grayscale(0) brightness(1);
+      }
+      @keyframes sapFadeIn {
+        0% { opacity: 0; transform: scale(1.08);}
+        100% { opacity: 1; transform: scale(1);}
+      }
+      .category-content {
+        position: absolute;
+        bottom: 30px;
+        left: 30px;
+        color: #fff;
+        z-index: 2;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      }
+      .category-title {
+        font-size: 2rem;
+        margin: 0 0 10px 0;
+        font-weight: 700;
+      }
+      .category-desc {
+        font-size: 1.1rem;
+        margin-bottom: 24px;
+      }
+      /* Codrops-inspired button */
+      .codrops-btn {
+        display: inline-block;
+        padding: 12px 32px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(90deg, #ff5f8f 0%, #ffb86c 100%);
+        border: none;
+        border-radius: 30px;
+        box-shadow: 0 4px 16px rgba(255,95,143,0.18);
+        cursor: pointer;
+        transition: background 0.4s, transform 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+      .codrops-btn:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.3);
+        border-radius: 100%;
+        transform: translate(-50%, -50%);
+        transition: width 0.4s, height 0.4s;
+        z-index: 0;
+      }
+      .codrops-btn:hover:after {
+        width: 200%;
+        height: 500%;
+      }
+      .codrops-btn span {
+        position: relative;
+        z-index: 1;
+      }
+      .codrops-btn:hover {
+        background: linear-gradient(90deg, #ffb86c 0%, #ff5f8f 100%);
+        transform: translateY(-2px) scale(1.04);
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h1 style="text-align:center; font-size:2.8rem; margin-top:60px;">Fashion Categories</h1>
+      <p style="text-align:center; color:#555; font-size:1.2rem;">Explore fashion content by category to find exactly what inspires you.</p>
+      <div class="categories-container">
+        <!-- Women's Fashion -->
+        <div class="category-card">
+          <img class="category-image" src="https://freedesignfile.com/upload/2017/02/Young-and-beautiful-fashion-woman-HD-picture-05.jpg" alt="Women's Fashion">
+          <div class="category-content">
+            <div class="category-title">Women's Fashion</div>
+            <div class="category-desc">Discover the latest trends and styles</div>
+            <a href="{% url 'womens_fashion' %}" class="codrops-btn"><span>Explore Women</span></a>
+          </div>
+        </div>
+        <!-- Men's Fashion -->
+        <div class="category-card">
+          <img class="category-image" src="https://www.tribuneindia.com/sortd-service/imaginary/v22-01/jpg/large/high?url=dGhldHJpYnVuZS1zb3J0ZC1wcm8tcHJvZC1zb3J0ZC9tZWRpYThlYWM2NDAwLTRlOTktMTFlZi1iY2VhLWU1MDI2ZDljNzJmMi5qcGc=" alt="Men's Fashion">
+          <div class="category-content">
+            <div class="category-title">Men's Fashion</div>
+            <div class="category-desc">Elevate your style with trending looks</div>
+            <a href="{% url 'mens_fashion' %}" class="codrops-btn"><span>Explore Men</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+  </html>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-gradient-to-br from-white to-pink-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Features You’ll Love</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-white shadow-lg rounded-lg text-center">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Smart Fashion Search</h3>
+          <p class="text-gray-600">Find outfits by typing or uploading an image. Your personal stylist, powered by AI.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg text-center">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Event Outfit Suggestions</h3>
+          <p class="text-gray-600">Need to dress for a wedding or brunch? We’ve got outfit ideas for every occasion.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg text-center">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Fashion Reels Feed</h3>
+          <p class="text-gray-600">Scroll through curated fashion videos from your favorite platforms — all in one feed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending Fashion Videos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF4B91;
+      --secondary: #FF8DC7;
+      --accent: #FFACC7;
+      --background: #FFF0F5;
+      --text: #2D3748;
+    }
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: var(--background);
+      color: var(--text);
+    }
+    .codrops-btn {
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .codrops-btn::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.1);
+      top: 100%;
+      left: 0;
+      transition: all 0.4s ease;
+      z-index: 0;
+    }
+    .codrops-btn:hover::before {
+      top: 0;
+    }
+    .video-card {
+      transform-origin: center;
+      transition: transform 0.3s ease;
+    }
+    .video-card:hover {
+      transform: scale(1.02);
+    }
+    .gradient-overlay {
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    }
+  </style>
+</head>
+<body class="p-6">
+  <section class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold text-gray-800">Trending Videos</h2>
+      <a href="#" class="text-pink-600 hover:underline flex items-center gap-1">
+        View All
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Card 1 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?cs=srgb&dl=pexels-kowalievska-1126993.jpg&fm=jpg" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-pink-600 text-white px-2 py-1 rounded">Instagram</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Summer Fashion Trends 2023</h3>
+          <p class="text-sm text-gray-500">450K views</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://thumbs.dreamstime.com/b/beautiful-fashion-women-posing-trendy-lifestyle-urban-portrait-city-background-147859337.jpg" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Streetwear Styling Tips</h3>
+          <p class="text-sm text-gray-500">320K views</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://img.freepik.com/free-photo/studio-close-up-portrait-young-fresh-blonde-woman-brown-straw-poncho-wool-black-trendy-hat-round-glasses-looking-camera-green-leather-had-bag_273443-1121.jpg?semt=ais_hybrid&w=740" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">Facebook</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Minimalist Wardrobe Essentials</h3>
+          <p class="text-sm text-gray-500">280K views</p>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://img.freepik.com/premium-vector/girl-stylish-tshirt-shorts_250538-544.jpg?semt=ais_hybrid&w=740" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-pink-600 text-white px-2 py-1 rounded">Instagram</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Accessorizing Your Outfit</h3>
+          <p class="text-sm text-gray-500">210K views</p>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://www.itl.cat/pngfile/big/235-2353210_fashion-man-and-woman.jpg" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Business Casual for Men</h3>
+          <p class="text-sm text-gray-500">190K views</p>
+        </div>
+      </div>
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://media.istockphoto.com/id/1733124463/photo/stylish-dark-skinned-man-wearing-a-yellow-blazer.jpg?s=612x612&w=0&k=20&c=Cym3apJurmcvuBIE-Hrwg0J_7p32V3I2XncZcYuw7i4=" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Business Casual for Men</h3>
+          <p class="text-sm text-gray-500">190K views</p>
+        </div>
+      </div><div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://i.pinimg.com/736x/e5/d1/84/e5d1849c2be5dcf6cf6f4e687c7cf3a2.jpg" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Business Casual for Men</h3>
+          <p class="text-sm text-gray-500">190K views</p>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://media.istockphoto.com/id/1356980592/photo/senior-woman-with-fancy-style.jpg?s=612x612&w=0&k=20&c=KzosBX-wnUG6bo5jLD0cjEcCLnCt-eqfAMEp39aIgmE=" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">Facebook</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+ 
+  <span class="absolute top-2 left-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">YouTube</span>
+  <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+    <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <polygon points="6 3 20 12 6 21 6 3" />
+      </svg>
+      Watch
+    </button>
+  </div>
+  <div class="p-3">
+    <h3 class="text-md font-medium text-gray-800">Sustainable Fashion Guide</h3>
+    <p class="text-sm text-gray-500">175K views</p>
+  </div>
+</div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Sustainable Fashion Guide</h3>
+          <p class="text-sm text-gray-500">175K views</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initial animation for cards
+    gsap.utils.toArray("[data-gsap]").forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: i * 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%",
+          toggleActions: "play none none none"
+        }
+      });
+    });
+
+    // Hover animation for cards
+    document.querySelectorAll('.video-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          scale: 1.02,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+    // Button hover animation
+    document.querySelectorAll('.codrops-btn').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        gsap.to(btn, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: "back.out(1.7)"
+        });
+      });
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+  </script>
+</body>
+ 
+</body>
+</html> 
+  <!-- GSAP Animations -->
+  <script>
+    gsap.from("nav", { y: -80, opacity: 0, duration: 1, ease: "power2.out" });
+    gsap.from(".hero-bg h1", { y: 50, opacity: 0, duration: 1, delay: 0.5, ease: "power2.out" });
+    gsap.from(".hero-bg p", { y: 50, opacity: 0, duration: 1, delay: 0.8, ease: "power2.out" });
+    gsap.from(".hero-bg button", { scale: 0.8, opacity: 0, duration: 0.7, delay: 1.1, ease: "back.out(1.7)" });
+  </script>
+</body>
+</html>
+
+<!-- Hero Section -->
+  <section class="text-center py-16 bg-pink-300 ">
+    <h1 class="text-5xl font-bold text-white-900 mb-4">About <span class="text-white-900">Fashion Flair Hub</span></h1>
+    <p class="text-lg max-w-2xl mx-auto text-gray-800">More than a brand — we are a movement. Elevating everyday style into something iconic, we connect fashion lovers with the trends, tips, and tools to express themselves.</p>
+  </section>
+
+  <!-- Our Story Section -->
+  <section  class="py-20 bg-white dark:bg-gray-950 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div class="space-y-6">
+        <h2 class="text-3xl md:text-4xl font-semibold section-heading">Our Story</h2>
+        <p class="text-lg leading-relaxed">Fashion Flair Hub was born from a desire to simplify and enrich the way people engage with fashion. Our founders, a group of style enthusiasts, saw the need for a platform that could bring together top fashion content in one place. From trend analysis to influencer insights, we aim to be your go-to source for fashion discovery.</p>
+      </div>
+      <div class="h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-md hover-effect">
+        <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Mission Section -->
+  <section  class="py-20 bg-gray-50 dark:bg-gray-900 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div class="h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-md hover-effect">
+        <img src="https://media.istockphoto.com/id/1404894296/photo/woman-with-stylish-bag-on-grey-background-closeup.jpg?s=612x612&w=0&k=20&c=I3PMzjMTCF-DNmewuEt-lvjddg8Fg1Y9xnh2hurB12k=" alt="Fashion Mission" class="w-full h-full object-cover" loading="lazy" />
+      </div>
+      <div class="space-y-6">
+        <h2 class="text-3xl md:text-4xl font-semibold section-heading">Our Mission</h2>
+        <p class="text-lg leading-relaxed">Our mission is to empower individuals to express themselves through fashion. By curating top-quality content and trends, we provide users with the inspiration and tools they need to stay ahead in the fashion world. We believe in fashion as a form of self-expression and aim to support that journey.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Back to Top -->
+  <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="fixed bottom-5 right-5 z-50 bg-black text-white dark:bg-white dark:text-black p-3 rounded-full shadow-lg back-to-top">↑</button>
+
+  <!-- Scripts -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+ // Cursor AI Dot
+    const dot = document.querySelector(".cursor-dot");
+    document.addEventListener("mousemove", (e) => {
+      gsap.to(dot, {
+        x: e.clientX,
+        y: e.clientY,
+        duration: 0.1,
+        ease: "power2.out"
+      });
+    });
+    // Hero Section Animations
+    gsap.from(".hero-title", {
+      y: 50,
+      opacity: 0,
+      duration: 1.5,
+      ease: "power3.out"
+    });
+    gsap.from(".hero-text", {
+      y: 30,
+      opacity: 0,
+      duration: 1.5,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+    // Floating Hero Title
+    gsap.to(".hero-title", {
+      y: -10,
+      repeat: -1,
+      yoyo: true,
+      ease: "power1.inOut",
+      duration: 2,
+    });
+    // Scroll Animations for Sections
+    gsap.from("#story", {
+      y: 100,
+      opacity: 0,
+      duration: 1.2,
+      scrollTrigger: {
+        trigger: "#story",
+        start: "top 80%",
+        scrub: true,
+      },
+    });
+    gsap.from("#mission", {
+      y: 100,
+      opacity: 0,
+      duration: 1.2,
+      scrollTrigger: {
+        trigger: "#mission",
+        start: "top 80%",
+        scrub: true,
+      },
+    });
+    // Enhanced Team Cards Animation
+    gsap.from(".team-card", {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      stagger: 0.2,
+      ease: "back.out(1.7)",
+      scrollTrigger: {
+        trigger: "#team",
+        start: "top 80%",
+        once: true,
+      },
+    });
+    // Animate Section Headings with Scale
+    gsap.from(".section-heading", {
+      scale: 0.8,
+      opacity: 0,
+      duration: 1.2,
+      ease: "elastic.out(1, 0.3)",
+      scrollTrigger: {
+        trigger: ".section-heading",
+        start: "top 90%",
+        toggleActions: "play none none reverse",
+      },
+    });
+    // Back to Top Button Animation
+    const backToTop = document.querySelector('.back-to-top');
+    gsap.to(backToTop, {
+      y: -5,
+      repeat: -1,
+      yoyo: true,
+      duration: 1,
+      ease: "power1.inOut"
+    });
+    gsap.to(dot, {
+      scale: 1.2,
+      duration: 0.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "power1.inOut"
+    });
+  </script>
+</body>
+</html>
+<!-- Fashion Community Join Section -->
+ 
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fashion Features</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script> <!-- Icon support -->
+</head>
+<body class="bg-white">
+
+  <!-- Feature Highlights Section -->
+  <section class="py-16 px-6 md:px-20 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-3 gap-12 text-center md:text-left">
+
+        <!-- Trending Styles -->
+        <div class="flex items-start space-x-4 ">
+          <div class="bg-pink-100 p-4 rounded-full">
+            <i data-lucide="trending-up" class="w-6 h-6 text-pink-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">Trending Styles</h3>
+            <p class="text-sm text-gray-700">Stay ahead with the latest fashion trends</p>
+          </div>
+        </div>
+
+        <!-- Curated Content -->
+        <div class="flex items-start space-x-4">
+          <div class="bg-pink-100 p-4 rounded-full">
+            <i data-lucide="star" class="w-6 h-6 text-pink-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">Curated Content</h3>
+            <p class="text-sm text-gray-700">Hand-picked fashion videos from top creators</p>
+          </div>
+        </div>
+
+        <!-- Style Inspiration -->
+        <div class="flex items-start space-x-4">
+          <div class="bg-pink-100 p-4 rounded-full">
+            <i data-lucide="sparkles" class="w-6 h-6 text-pink-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">Style Inspiration</h3>
+            <p class="text-sm text-gray-700">Get inspired by diverse fashion ideas</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    lucide.createIcons(); // Initialize Lucide icons
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Feedback | Fashion Flair Hub</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #EC4899;
+            --secondary-color: #F472B6;
+            --accent-color: #FBCFE8;
+        }
+
+        .custom-button {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            transition: all 0.3s ease;
+        }
+
+        .custom-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .custom-button:hover::before {
+            left: 100%;
+        }
+
+        .custom-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 via-purple-50 to-white min-h-screen py-12 px-4">
+    <!-- Decorative Elements -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+        <div class="absolute top-20 left-10 w-32 h-32 bg-pink-200 rounded-full opacity-20 floating"></div>
+        <div class="absolute bottom-20 right-10 w-40 h-40 bg-purple-200 rounded-full opacity-20 floating" style="animation-delay: 1s"></div>
+    </div>
+
+    <!-- Feedback Container -->
+    <div class="feedback-container max-w-3xl mx-auto bg-white shadow-xl rounded-2xl p-8 backdrop-blur-sm bg-opacity-90">
+        <h2 class="text-4xl font-bold text-gray-800 mb-8 border-b pb-4 relative text-center">
+            Share Your Experience
+            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-pink-500 to-purple-500"></div>
+        </h2>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            <!-- Review Text -->
+            <div class="form-element">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Write your review</label>
+                <textarea name="caption" id="caption" rows="4" required
+                    class="w-full p-4 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-pink-500 transition-all duration-300"
+                    placeholder="Share your experience about the product..."></textarea>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-element">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Image (optional)</label>
+                <div class="relative">
+                    <input type="file" name="image" id="image" accept="image/*"
+                        class="block w-full text-sm text-gray-500 border-2 border-gray-200 rounded-lg p-3 file:bg-pink-50 file:border-0 file:text-pink-700 file:font-medium hover:file:bg-pink-100 transition-all duration-300"/>
+                    <div class="preview-box mt-4">
+                        <img id="imagePreview" class="w-48 h-48 object-cover rounded-lg shadow-md hidden" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Upload -->
+            <div class="form-element">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Video (optional)</label>
+                <div class="relative">
+                    <input type="file" name="video" id="video" accept="video/*"
+                        class="block w-full text-sm text-gray-500 border-2 border-gray-200 rounded-lg p-3 file:bg-pink-50 file:border-0 file:text-pink-700 file:font-medium hover:file:bg-pink-100 transition-all duration-300"/>
+                    <div class="preview-box mt-4">
+                        <video id="videoPreview" class="w-64 h-40 rounded-lg shadow-md hidden" controls></video>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit"
+                    class="custom-button px-8 py-3 text-white font-medium rounded-lg text-lg">
+                    Submit Review
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // GSAP Animations
+        gsap.from('.feedback-container', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.form-element', {
+            opacity: 0,
+            x: -30,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power2.out'
+        });
+
+        // Preview image with animation
+        document.getElementById('image').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('imagePreview');
+            const previewBox = preview.parentElement;
+            
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+                
+                gsap.fromTo(previewBox, 
+                    { opacity: 0, scale: 0.8 },
+                    { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)' }
+                );
+            }
+        });
+
+        // Preview video with animation
+        document.getElementById('video').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('videoPreview');
+            const previewBox = preview.parentElement;
+            
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+                
+                gsap.fromTo(previewBox, 
+                    { opacity: 0, scale: 0.8 },
+                    { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.7)' }
+                );
+            }
+        });
+    </script>
+
+    
+<!-- Footer -->
+
+
+
+
+<!--trending videos section-->
+<footer class="bg-gray-50 mt-16 pt-12 pb-6 border-t">
+  <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
+    <!-- Brand & Social -->
+    <div>
+      <div class="text-2xl font-bold text-pink-600 mb-2">FASHION FLAIR HUB</div>
+      <p class="text-gray-600 mb-4">
+        Your ultimate destination for fashion inspiration and style ideas. Discover the latest trends through curated short videos from across the web.
+      </p>
+      <div class="flex space-x-4 text-2xl text-gray-500">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <!-- Quick Links -->
+    <div>
+      <div class="font-bold text-lg mb-2">Quick Links</div>
+      <ul class="space-y-2 text-gray-700">
+        <li><a href="#" class="hover:text-pink-600">About Us</a></li>
+        <li><a href="#" class="hover:text-pink-600">Contact Us</a></li>
+        <li><a href="#" class="hover:text-pink-600">Women's Fashion</a></li>
+        <li><a href="#" class="hover:text-pink-600">Men's Fashion</a></li>
+        <li><a href="#" class="hover:text-pink-600">Fashion Ideas</a></li>
+      </ul>
+    </div>
+    <!-- Contact Info -->
+    <div>
+      <div class="font-bold text-lg mb-2">Contact Info</div>
+      <ul class="space-y-2 text-gray-700">
+        <li>
+          <span class="text-pink-600 mr-2">&#x1F4CD;</span>
+          123 Fashion Street, Style Avenue, Trend City, 10001
+        </li>
+        <li>
+          <span class="text-pink-600 mr-2">&#x260E;</span>
+          +1 (555) 123-4567
+        </li>
+        <li>
+          <span class="text-pink-600 mr-2">&#x2709;</span>
+          info@fashionflairhub.com
+        </li>
+      </ul>
+    </div>
+
+
+
+    <!-- Subscribe -->
+    <div>
+      <div class="font-bold text-lg mb-2">Subscribe</div>
+      <p class="text-gray-600 mb-3">Get the latest fashion trends and style ideas delivered to your inbox.</p>
+      <form>
+        <input type="email" placeholder="Your email address" class="w-full border rounded px-3 py-2 mb-2 focus:outline-none" />
+        <button type="submit" class="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition">Subscribe</button>
+      </form>
+    </div>
+  </div>
+  <div class="mt-10 border-t pt-4 text-center text-gray-500 text-sm">
+    © 2025 Fashion Flair Hub. All rights reserved.
+  </div>
+</footer>
+</html>
+{% endblock content %}

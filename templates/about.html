@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Fashion Flair Hub</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .hero-bg {
+      background-image: url('https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-white text-gray-900">
+
+  <!-- Hero Section -->
+  <section class="hero-bg text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-7xl font-bold drop-shadow-lg">About <span class="text-pink-600">Fashion Flair Hub</span></h1>
+      <p class="text-lg md:text-xl mt-4 drop-shadow-lg">More than a brand — we are a movement. Elevating everyday style into something iconic.</p>
+    </div>
+  </section>
+
+  <!-- Our Story Section -->
+  <section id="story" class="py-20 bg-white dark:bg-gray-950 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div class="space-y-6">
+        <h2 class="text-3xl md:text-4xl font-semibold section-heading">Our Story</h2>
+        <p class="text-lg leading-relaxed">Fashion Flair Hub was born from a desire to simplify and enrich the way people engage with fashion. Our founders, a group of style enthusiasts, saw the need for a platform that could bring together top fashion content in one place. From trend analysis to influencer insights, we aim to be your go-to source for fashion discovery.</p>
+      </div>
+      <div class="h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-md hover-effect">
+        <img src="https://images.unsplash.com/photo-1617738998181-6f0b0c91a4cc?auto=format&fit=crop&w=800&q=80" alt="Fashion Story" class="w-full h-full object-cover" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Mission Section -->
+  <section id="mission" class="py-20 bg-gray-50 dark:bg-gray-900 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div class="h-[300px] md:h-[400px] rounded-lg overflow-hidden shadow-md hover-effect">
+        <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80" alt="Fashion Mission" class="w-full h-full object-cover" loading="lazy" />
+      </div>
+      <div class="space-y-6">
+        <h2 class="text-3xl md:text-4xl font-semibold section-heading">Our Mission</h2>
+        <p class="text-lg leading-relaxed">Our mission is to empower individuals to express themselves through fashion. By curating top-quality content and trends, we provide users with the inspiration and tools they need to stay ahead in the fashion world. We believe in fashion as a form of self-expression and aim to support that journey.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Join Community Section -->
+  <section class="w-auto h-screen flex items-center justify-center bg-gradient-to-r from-pink-400 via-pink-500 to-purple-600 text-white px-4">
+    <div class="text-center max-width">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Join Our Fashion Community</h2>
+      <p class="text-lg md:text-2xl mb-9">
+        Become part of our growing community of fashion enthusiasts and creators. Share your style,
+        discover new trends, and connect with like-minded individuals.
+      </p>
+      <button class="btn-hover-effect relative inline-block px-6 py-3 text-lg border border-white rounded-md font-medium hover:bg-white hover:text-pink-400 transition duration-200">
+        Join Now
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-400 py-8">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg font-bold text-white mb-2">FASHION FLAIR HUB</h3>
+        <p>Your ultimate destination for fashion inspiration and style ideas.</p>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white mb-2">Quick Links</h3>
+        <ul>
+          <li><a href="#" class="hover:text-pink-400">About Us</a></li>
+          <li><a href="#" class="hover:text-pink-400">Contact Us</a></li>
+          <li><a href="#" class="hover:text-pink-400">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white mb-2">Follow Us</h3>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-pink-400"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="hover:text-pink-400"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="hover:text-pink-400"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="hover:text-pink-400"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8 text-sm text-gray-500">
+      © 2025 Fashion Flair Hub. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- GSAP Animations -->
+  <script>
+    gsap.from("nav", { y: -80, opacity: 0, duration: 1, ease: "power2.out" });
+    gsap.from(".hero-bg h1", { y: 50, opacity: 0, duration: 1, delay: 0.5, ease: "power2.out" });
+    gsap.from(".hero-bg p", { y: 50, opacity: 0, duration: 1, delay: 0.8, ease: "power2.out" });
+    gsap.from(".hero-bg button", { scale: 0.8, opacity: 0, duration: 0.7, delay: 1.1, ease: "back.out(1.7)" });
+  </script>
+</body>
+</html>

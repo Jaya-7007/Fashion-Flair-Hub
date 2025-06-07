@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending Fashion Videos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF4B91;
+      --secondary: #FF8DC7;
+      --accent: #FFACC7;
+      --background: #FFF0F5;
+      --text: #2D3748;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: var(--background);
+      color: var(--text);
+    }
+
+    .codrops-btn {
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .codrops-btn::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.1);
+      top: 100%;
+      left: 0;
+      transition: all 0.4s ease;
+      z-index: 0;
+    }
+
+    .codrops-btn:hover::before {
+      top: 0;
+    }
+
+    .video-card {
+      transform-origin: center;
+      transition: transform 0.3s ease;
+    }
+
+    .video-card:hover {
+      transform: scale(1.02);
+    }
+
+    .gradient-overlay {
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    }
+  </style>
+</head>
+<body class="p-6">
+
+  <section class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-bold text-gray-800">Trending Videos</h2>
+      <a href="#" class="text-pink-600 hover:underline flex items-center gap-1">
+        View All
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Card 1 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlRC08vqm6S8ipM4n7OKy1bCmwP6KMkn-zRRojfKbqDI0fQTsVXElcUamEvjNt15aCdYQ&usqp=CAU" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-pink-600 text-white px-2 py-1 rounded">Instagram</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Summer Fashion Trends 2023</h3>
+          <p class="text-sm text-gray-500">450K views</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX9v732lulr9SfxSVRLPf3ofkLf4LboRmL6Q&s" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Streetwear Styling Tips</h3>
+          <p class="text-sm text-gray-500">320K views</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="data:image/jpeg;base64,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" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">Facebook</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Minimalist Wardrobe Essentials</h3>
+          <p class="text-sm text-gray-500">280K views</p>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoQ67sGiCtteoFCW3ErzBQ6gsDVDXPxbMPmQ&s" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-pink-600 text-white px-2 py-1 rounded">Instagram</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Accessorizing Your Outfit</h3>
+          <p class="text-sm text-gray-500">210K views</p>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOpJujwdf0zqsg1nkJieX0iiDshULNFONKAw&s" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Business Casual for Men</h3>
+          <p class="text-sm text-gray-500">190K views</p>
+        </div>
+      </div>
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaxPO76wDpJRtWhCiR1n3BC5jz_8JxXUohjw&s" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Business Casual for Men</h3>
+          <p class="text-sm text-gray-500">190K views</p>
+        </div>
+      </div><div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsmzi7-3QGWZT8SsNnU-471vwELAmI9yEEsg&s" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-red-600 text-white px-2 py-1 rounded">Youtube</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Business Casual for Men</h3>
+          <p class="text-sm text-gray-500">190K views</p>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="group relative rounded-lg overflow-hidden bg-white shadow-md video-card" data-gsap>
+        <img src="https://thumbs.dreamstime.com/b/happy-black-female-blogger-making-video-review-new-clothes-successful-shopping-recording-video-cellphone-happy-black-260787303.jpg" class="object-cover w-full h-60" />
+        <span class="absolute top-2 left-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">Facebook</span>
+        <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+          <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <polygon points="6 3 20 12 6 21 6 3" />
+            </svg>
+            Watch
+          </button>
+        </div>
+        
+ 
+  <span class="absolute top-2 left-2 text-xs bg-blue-600 text-white px-2 py-1 rounded">YouTube</span>
+  <div class="absolute inset-0 gradient-overlay opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+    <button class="codrops-btn text-white border border-white hover:bg-white/20 rounded px-4 py-2 flex items-center gap-2 z-10">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <polygon points="6 3 20 12 6 21 6 3" />
+      </svg>
+      Watch
+    </button>
+  </div>
+  <div class="p-3">
+    <h3 class="text-md font-medium text-gray-800">Sustainable Fashion Guide</h3>
+    <p class="text-sm text-gray-500">175K views</p>
+  </div>
+</div>
+        <div class="p-3">
+          <h3 class="text-md font-medium text-gray-800">Sustainable Fashion Guide</h3>
+          <p class="text-sm text-gray-500">175K views</p>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Initial animation for cards
+    gsap.utils.toArray("[data-gsap]").forEach((el, i) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: i * 0.1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%",
+          toggleActions: "play none none none"
+        }
+      });
+    });
+
+    // Hover animation for cards
+    document.querySelectorAll('.video-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, {
+          scale: 1.02,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+
+    // Button hover animation
+    document.querySelectorAll('.codrops-btn').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        gsap.to(btn, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: "back.out(1.7)"
+        });
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        gsap.to(btn, {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    });
+  </script>
+</body>
+</html>

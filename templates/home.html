@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fashion Flair Hub - Home</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .hero-bg {
+      background-image: url('https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-white text-gray-900">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 flex justify-between items-center h-16">
+      <div class="text-2xl font-bold text-pink-600">FASHION FLAIR HUB</div>
+      <div class="hidden md:flex space-x-6">
+        <a href="#" class="text-gray-700 hover:text-pink-600">Home</a>
+        <a href="#" class="text-gray-700 hover:text-pink-600">Men</a>
+        <a href="#" class="text-gray-700 hover:text-pink-600">Women</a>
+        <a href="#" class="text-gray-700 hover:text-pink-600">Fashion Ideas</a>
+        <a href="#" class="text-gray-700 hover:text-pink-600">About</a>
+        <a href="#" class="text-gray-700 hover:text-pink-600">Contact</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button class="text-gray-700 hover:text-pink-600">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="text-gray-700 hover:text-pink-600">
+          <i class="fas fa-user"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-bg text-white py-20">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+      <h1 class="text-5xl md:text-7xl font-bold drop-shadow-lg">Discover Your Fashion Identity</h1>
+      <p class="text-lg md:text-xl mt-4 drop-shadow-lg">Short Reels • AI Styling • Voice Search</p>
+      <button class="mt-6 px-8 py-3 bg-pink-600 hover:bg-pink-700 text-white rounded-full shadow-lg transition">Get Started</button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-gradient-to-br from-white to-pink-50">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Features You’ll Love</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="p-6 bg-white shadow-lg rounded-lg text-center">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Smart Fashion Search</h3>
+          <p class="text-gray-600">Find outfits by typing, speaking, or uploading an image. Your personal stylist, powered by AI.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg text-center">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Event Outfit Suggestions</h3>
+          <p class="text-gray-600">Need to dress for a wedding or brunch? We’ve got outfit ideas for every occasion.</p>
+        </div>
+        <div class="p-6 bg-white shadow-lg rounded-lg text-center">
+          <h3 class="text-xl font-semibold text-pink-600 mb-2">Fashion Reels Feed</h3>
+          <p class="text-gray-600">Scroll through curated fashion videos from your favorite platforms — all in one feed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="py-16 bg-pink-600 text-white text-center">
+    <h2 class="text-4xl font-bold mb-4">Ready to Elevate Your Style?</h2>
+    <p class="text-lg mb-6">Join thousands of fashion enthusiasts and start your journey today.</p>
+    <button class="px-8 py-3 bg-white text-pink-600 font-semibold rounded-full shadow-lg hover:bg-gray-100 transition">Sign Up Now</button>
+  </section>
+
+    <!-- Footer -->
+  <footer class="bg-gray-50 mt-16 pt-12 pb-6 border-t">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10">
+      <!-- Brand & Social -->
+      <div>
+        <div class="text-2xl font-bold text-pink-600 mb-2">FASHION FLAIR HUB</div>
+        <p class="text-gray-600 mb-4">
+          Your ultimate destination for fashion inspiration and style ideas. Discover the latest trends through curated short videos from across the web.
+        </p>
+        <div class="flex space-x-4 text-2xl text-gray-500">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <!-- Quick Links -->
+      <div>
+        <div class="font-bold text-lg mb-2">Quick Links</div>
+        <ul class="space-y-2 text-gray-700">
+          <li><a href="#" class="hover:text-pink-600">About Us</a></li>
+          <li><a href="#" class="hover:text-pink-600">Contact Us</a></li>
+          <li><a href="#" class="hover:text-pink-600">Women's Fashion</a></li>
+          <li><a href="#" class="hover:text-pink-600">Men's Fashion</a></li>
+          <li><a href="#" class="hover:text-pink-600">Fashion Ideas</a></li>
+        </ul>
+      </div>
+      <!-- Contact Info -->
+      <div>
+        <div class="font-bold text-lg mb-2">Contact Info</div>
+        <ul class="space-y-2 text-gray-700">
+          <li>
+            <span class="text-pink-600 mr-2">&#x1F4CD;</span>
+            123 Fashion Street, Style Avenue, Trend City, 10001
+          </li>
+          <li>
+            <span class="text-pink-600 mr-2">&#x260E;</span>
+            +1 (555) 123-4567
+          </li>
+          <li>
+            <span class="text-pink-600 mr-2">&#x2709;</span>
+            info@fashionflairhub.com
+          </li>
+        </ul>
+      </div>
+      <!-- Subscribe -->
+      <div>
+        <div class="font-bold text-lg mb-2">Subscribe</div>
+        <p class="text-gray-600 mb-3">Get the latest fashion trends and style ideas delivered to your inbox.</p>
+        <form>
+          <input type="email" placeholder="Your email address" class="w-full border rounded px-3 py-2 mb-2 focus:outline-none" />
+          <button type="submit" class="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600 transition">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="mt-10 border-t pt-4 text-center text-gray-500 text-sm">
+      © 2025 Fashion Flair Hub. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>
+
+  
+  <!-- GSAP Animations -->
+  <script>
+    gsap.from("nav", { y: -80, opacity: 0, duration: 1, ease: "power2.out" });
+    gsap.from(".hero-bg h1", { y: 50, opacity: 0, duration: 1, delay: 0.5, ease: "power2.out" });
+    gsap.from(".hero-bg p", { y: 50, opacity: 0, duration: 1, delay: 0.8, ease: "power2.out" });
+    gsap.from(".hero-bg button", { scale: 0.8, opacity: 0, duration: 0.7, delay: 1.1, ease: "back.out(1.7)" });
+  </script>
+</body>
+</html>
