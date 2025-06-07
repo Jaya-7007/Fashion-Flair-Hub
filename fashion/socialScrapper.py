@@ -1,6 +1,10 @@
 import json
 import re
 import http.client
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def extract_hashtags(caption):
     """
