@@ -231,7 +231,7 @@ def analyze_image_with_gemini(image_file):
     
     # Configure API key from settings
     # genai.configure(api_key='AIzaSyDp0CWrFw-l5TdkwynD5rPRAKTgS7ot_AE')
-    client = genai.Client(api_key="AIzaSyDp0CWrFw-l5TdkwynD5rPRAKTgS7ot_AE")
+    # client = genai.Client(api_key="AIzaSyDp0CWrFw-l5TdkwynD5rPRAKTgS7ot_AE")      THIS 
     
     # Set up the model
     model = genai.GenerativeModel('gemini-2.0-flash')
